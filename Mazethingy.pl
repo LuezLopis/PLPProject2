@@ -1,4 +1,8 @@
-Maze(s, f, e).
+simple_map([[s,f,e]]).
+basic_map([[w,s,w],
+           [f,f,w],
+           [e,w,w]]).
+
 
 find_exit(Maze, Instructlst) :- 
   first_row(Maze, Row1), find_start(s, Row1, 0)
