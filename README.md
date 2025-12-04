@@ -1,21 +1,21 @@
 # PLPProject2
 Predicate that take a maze and a set of instructions, then checks if set of instructions completes maze
 
- You will write a predicate find_exit/2. The first parameter is the maze as described below, and 
-the second should be a list of actions that will solve the maze. The predicate succeeds if following 
-the list of actions will lead from the start space to any exit space. The predicate must work even 
-when called with an unbound variable for its second parameter. The predicate should fail if the 
-maze is invalid, if following the actions does not end in an exit space, or if an action would result 
-in moving off the maze or onto a wall.
- The Maze
+ You will write a predicate find_exit/2. The first parameter is the maze as described below, and the second should be a list of actions that will solve the maze. The predicate succeeds if following 
+the list of actions will lead from the start space to any exit space. The predicate must work even when called with an unbound variable for its second parameter. The predicate should fail if the 
+maze is invalid, if following the actions does not end in an exit space, or if an action would result in moving off the maze or onto a wall.
+
+** The Maze**
+
  A maze is a list of rows with each row being a list of cells. Each cell can be a f, w, s, or e.
  • An f represents a floor space (empty).
  • A w represents a wall.
  • An s represents the start space. There should be exactly one start space.
  • An e represents an exit. There can be more than one exit.
- The Actions
- An action can be left, right, up, and down. When solving the maze, the coordinates start on the 
-start space.
+ 
+** The Actions**
+
+ An action can be left, right, up, and down. When solving the maze, the coordinates start on the start space.
  • A left action moves the coordinates to the previous column.
  • A right action moves the coordinates to the next column.
  • A up action moves the coordinates to the previous row.
