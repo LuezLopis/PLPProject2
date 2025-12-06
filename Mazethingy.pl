@@ -1,15 +1,15 @@
-%simple_map([[s,f,e]]).
-%basic_map([[w,s,w],
-%           [f,f,w],
-%           [e,w,w]]).
-
+% Create a fresh file with this minimal version:
+simple_map([[s,f,e]]).
+basic_map([[w,s,w],[f,f,w],[e,w,w]]).
 basic_instruct([down, left, down]).
+
+test :- write('Testing...').
 
 find_exit(Maze, Instructlst) :- 
     first_row(Maze, Row1), 
     find_start(s, Row1, 0, Loc),
     % function to take us to start
-   wander(Maze, Instructlst, 1, Loc, s).
+   wander(Maze, Instructlst, 0, Loc, s).
 
 find_start(_, [], _, _):-
     write('There is no start '), nl.
@@ -20,7 +20,7 @@ find_start(Start , [Start|_], Acc, Acc):- % ends after start is found
 find_start(Start , [_|T], Acc, Loc) :-
     find_start(Start, T, Acc, Loc), Loc is Acc + 1.
 
-first_row([[H|_]|_], H).
+first_row([[H|_]|_], H). 
 
 maze_element(Matrix, R, C, Element) :-
     nth0(R, Matrix, Row),   % Get the row
