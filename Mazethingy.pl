@@ -11,7 +11,7 @@ find_exit(Maze, Instructlst) :-
     % function to take us to start
    wander(Maze, Instructlst, 1, Loc, s).
 
-find_start(Start, [], Acc, Loc):-
+find_start(_, [], _, _):-
     write('There is no start '), nl.
 
 find_start(Start , [Start|_], Acc, Acc):- % ends after start is found
@@ -29,7 +29,7 @@ maze_element(Matrix, R, C, Element) :-
 wander(Maze, Instructlst, CurrR, CurrC, e) :- % exit has been found has been found
     write('Exit has been found '), nl, !.
 
-wander(Maze, [], CurrR, CurrC, CurrVal) :- 
+wander(_, [], _, _, CurrVal) :- 
     CurrVal \= e,
     write('Out of Instruction '), nl, fail.    
 
