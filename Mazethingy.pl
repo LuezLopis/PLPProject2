@@ -5,10 +5,11 @@ basic_map([[w,s,w],
 
 basic_instruct([down, left, down]).
 
+Start = s.
 
 find_exit(Maze, Instructlst) :- 
     first_row(Maze, Row1), 
-    find_start(s, Row1, 0),
+    find_start(Start, Row1, 0),
     % function to take us to start
    wander(Maze, Instructlst, 1, Loc, s).
 
@@ -27,7 +28,7 @@ maze_element(Matrix, R, C, Element) :-
 
 wander(Maze, Instructlst, CurrR, CurrC, CurrVal) :-
     (CurrVal = s; CurrVal = f), % current spot is valid and not the exit
-    next_spot_is( Instructlst, CurrR, CurrC). % checks the next location
+    next_spot_is(Maze, Instructlst, CurrR, CurrC). % checks the next location
     
 wander(Maze, Instructlst, CurrR, CurrC, CurrVal) :- 
     CurrVal = e, % exit has been found has been found
@@ -36,10 +37,10 @@ wander(Maze, Instructlst, CurrR, CurrC, CurrVal) :-
 wander(Maze, [], CurrC, CurrR, CurrVal) :- 
     write('Out of Instruction '), nl.    
 
-next_spot_is(Currlst, R1, C1) :- % if the spot is f(floor) or s(start) then read next instruct
+next_spot_is(Maze, Currlst, R1, C1) :- % if the spot is f(floor) or s(start) then read next instruct
     read_instruct(Currlst, Direct, Remainlst), % reads instruction
-    do_direct(Direct), % manipulates the coordinate of the curr to the next instruction direction
-    maze_element(Maze, R1, C1, NextSpot), % takes out the next location 
+    do_direct(Direct, R1, C1, NEWR, NEWC), % manipulates the coordinate of the curr to the next instruction direction
+    maze_element(Maze, NEWR, NEWC, NextSpot), % takes out the next location 
     is_wall(NextSpot).
 
 is_wall(Spot) :-
@@ -48,20 +49,20 @@ is_wall(Spot) :-
 
 is_wall(Spot) :-
     Spot \== w, % if not a wall then proceed to next spot
-    wander(Maze, Remainlst, R1, C1, NextSpot).
+    wander(Maze, Remainlst, R1, C1, Spot).
 
 read_instruct([H|T], Direct, Remainlst) :-
     Direct = H,
     Remainlst = T. 
 
-do_direct(left) :- 
-    C1 is C, C is C1 - 1.
+do_direct(left, OGR, OGC, OGR, NEWC) :- 
+    NEWC is OGC - 1.
 
-do_direct(right) :- 
-    C1 is C, C is C1 + 1.
+do_direct(right, OGR, OGC, OGR, NEWC) :- 
+    NEWC is OGC + 1.
 
-do_direct(up) :- 
-   R1 is R, R is R1 - 1.
+do_direct(up, OGR, OGC, NEWR, OGC) :- 
+   NEWR is OGR - 1.
 
-do_direct(down) :- 
-   R1 is R, R is R1 + 1.
+do_direct(down, OGR, OGC, NEWR, OGC) :- 
+   NEWR is OGR + 1.
