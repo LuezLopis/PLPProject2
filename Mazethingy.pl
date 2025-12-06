@@ -14,7 +14,9 @@ find_exit(Maze, Instructlst) :-
 find_start(Start, [], Acc, Loc):-
     write('There is no start '), nl.
 
-find_start(Start , [Start|_], Acc, Acc).% ends after start is found
+find_start(Start , [Start|_], Acc, Acc):- % ends after start is found
+    write('Start has been found, beginning...'), nl.
+
 find_start(Start , [_|T], Acc, Loc) :-
     find_start(Start, T, Acc, Loc), Loc is Acc + 1.
 
@@ -36,18 +38,23 @@ wander(Maze, _, _, _, w):- % not caring about any but if spot is wall then failu
 
 wander(Maze, [Direct|Remainlst], CurrR, CurrC, CurrVal) :-
     (CurrVal = s; CurrVal = f), % current spot is valid and not the exit
+    write('Wandering, '),
     do_direct(Direct, CurrR, CurrC, NEWR, NEWC), % manipulates the coordinate of the curr to the next instruction direction
     maze_element(Maze, NEWR, NEWC, NextSpot), % takes out the next location 
     wander(Maze, Remainlst, NEWR, NEWC, NextSpot).
 
 do_direct(left, OGR, OGC, OGR, NEWC) :- 
-    NEWC is OGC - 1.
+    NEWC is OGC - 1,
+    write('Moving Left, ').
 
 do_direct(right, OGR, OGC, OGR, NEWC) :- 
-    NEWC is OGC + 1.
+    NEWC is OGC + 1,
+    write('Moving Right, ').
 
 do_direct(up, OGR, OGC, NEWR, OGC) :- 
-   NEWR is OGR - 1.
+   NEWR is OGR - 1,
+   write('Moving Up, ').
 
 do_direct(down, OGR, OGC, NEWR, OGC) :- 
-   NEWR is OGR + 1.
+   NEWR is OGR + 1,
+   write('Moving Down, ').
