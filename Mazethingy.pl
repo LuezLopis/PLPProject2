@@ -12,7 +12,7 @@ find_exit(Maze, Instructlst) :-
   
 
 
-find_start(Start , [H|_], Loc). // ends after start is found
+find_start(Start , [H|_], Loc). % ends after start is found
 find_start(Start , [_|T], Loc) :-
     find_start(Start, T, Loc1), Loc is Loc1 + 1.
 
@@ -22,16 +22,28 @@ maze_element(Matrix, R, C, Element) :-
     nth0(R, Matrix, Row),   % Get the row
     nth0(C, Row, Element).  % Get element from that row
 
-wander(Maze, Instructlst, CurrR, CurrC) :-
-    maze_element(Maze, CurrR, CurrC, CurrVal), % takes out the current location  
-    CurrVal = e,
-    !,    % will exit if exit is found
-    read_instruct(Instructlst), % reads instruction
-    do_direct(Direct), // 
+wander(Maze, Instructlst, CurrR, CurrC, CurrVal) :-
+    (Spot = s; Spot = f), % current spot is valid and not the exit
+    next_spot_is(CurrVal, Instructlst, CurrR, CurrC), % checks the next location
     
-           
-read_instruct([H|T]) :-
-    Direct = H; 
+    
+    
+next_spot_is(Spot, Currlst, R1, C1) :- % if the spot is f(floor) or s(start) then read next instruct
+    read_instruct(Currlst, Direct, Remainlst), % reads instruction
+    do_direct(Direct), % manipulates the coordinate of the curr to the next instruction direction
+    maze_element(Maze, R1, C1, CurrVal), % takes out the next location 
+    
+is_wall(Spot) :-
+    Spot == w,
+    go_back();
+
+is_wall(Spot) :-
+    Spot \== w,
+    wander(Maze, );
+
+read_instruct([H|T], Direct, Remainlst) :-
+    Direct = H,
+    Remainlst = T; 
 
 do_direct(left) :- 
     C1 is C, C is C1 - 1.
@@ -45,3 +57,4 @@ do_direct(up) :-
 do_direct(down) :- 
    R1 is R, R is R1 + 1.
 
+go_back()
