@@ -1,26 +1,32 @@
-% Create a fresh file with this minimal version:
-simple_map([[s,f,e]]).
-basic_map([[w,s,w],[f,f,w],[e,w,w]]).
-basic_instruct([down, left, down]).
-
-test :- write('Testing...').
+big_map([[s,w,f,f],
+         [f,w,f,w],
+         [f,f,f,w],
+         [w,f,e,w]]).
+big_instruct([down, down, right, right, down, left, down, left]).     
+spiral_map([[s,f,f,f],
+            [w,w,f,w],
+            [f,f,f,w],
+            [w,f,w,w],
+            [e,f,f,f]]).
+spiral_instruct([right, right, down, down, left, down, down, right]).
 
 find_exit(Maze, Instructlst) :- 
-    first_row(Maze, Row1), 
-    find_start(s, Row1, 0, Loc),
+    first_row(Maze, Row), 
+    find_start(s, Row, Loc),
     % function to take us to start
    wander(Maze, Instructlst, 0, Loc, s).
 
-find_start(_, [], _, _):-
-    write('There is no start '), nl.
+find_start(Start, Row, Column) :-
+    find_start_helper(Start, Row, 0, Column).
 
-find_start(Start , [Start|_], Acc, Acc):- % ends after start is found
-    write('Start has been found, beginning...'), nl.
+find_start_helper(Start , [Start|_], Acc, Acc):- % ends after start is found
+    write('Start has been found, beginning...'), nl, !.
 
-find_start(Start , [_|T], Acc, Loc) :-
-    find_start(Start, T, Acc, Loc), Loc is Acc + 1.
+find_start_helper(Start , [_|T], CurrAcc, Loc) :-
+    NextAcc is CurrAcc + 1, 
+    find_start_helper(Start, T, NextAcc, Loc).
 
-first_row([[H|_]|_], H). 
+first_row([H|_], H). 
 
 maze_element(Matrix, R, C, Element) :-
     nth0(R, Matrix, Row),   % Get the row
