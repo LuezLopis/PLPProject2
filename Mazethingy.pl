@@ -8,25 +8,29 @@ spiral_map([[s,f,f,f],
             [f,f,f,w],
             [w,f,w,w],
             [e,f,f,f]]).
-spiral_instruct([right, right, down, down, left, down, down, right]).
+spiral_instruct([right, right, down, down, left, down, down, left]).
 
 find_exit(Maze, Instructlst) :- 
-    first_row(Maze, Row), 
-    find_start(s, Row, Loc),
+    %first_row(Maze, Row), 
+    find_start_in_maze(Maze, 0, LocR, LocC),
     % function to take us to start
-   wander(Maze, Instructlst, 0, Loc, s).
+   wander(Maze, Instructlst, LocR, LocC, s).
 
-find_start(Start, Row, Column) :-
-    find_start_helper(Start, Row, 0, Column).
+find_start_in_maze([Row|_], CurrR, CurrC, Col):-
+    find_start_in_row(Row, 0, Col), %found in row
+    !. 
 
-find_start_helper(Start , [Start|_], Acc, Acc):- % ends after start is found
-    write('Start has been found, beginning...'), nl, !.
+find_start_in_maze([_|RemainMaze], CurrRow, SearchRow, SearchCol) :-
+    NextRow is CurrentRow + 1,
+    find_start_in_maze(RemainMaze, NextRow, SearchRow, SearchCol).
 
-find_start_helper(Start , [_|T], CurrAcc, Loc) :-
-    NextAcc is CurrAcc + 1, 
-    find_start_helper(Start, T, NextAcc, Loc).
+find_start_in_row([s|_], Loc, Loc) :- !. % s is found in the front of this row or whats left of the row
 
-first_row([H|_], H). 
+find_start_in_row([_|RemainRow], Loc, Col) :-
+    NextCol is Loc + 1,
+    find_start_in_row(RemainRow, NextCol, Col).
+
+%first_row([H|_], H). as S might not be in the first row
 
 maze_element(Matrix, R, C, Element) :-
     nth0(R, Matrix, Row),   % Get the row
@@ -44,7 +48,7 @@ wander(Maze, _, _, _, w):- % not caring about any but if spot is wall then failu
 
 wander(Maze, [Direct|Remainlst], CurrR, CurrC, CurrVal) :-
     (CurrVal = s; CurrVal = f), % current spot is valid and not the exit
-    write('Wandering, '),
+    write('Wandering , '),
     do_direct(Direct, CurrR, CurrC, NEWR, NEWC), % manipulates the coordinate of the curr to the next instruction direction
     maze_element(Maze, NEWR, NEWC, NextSpot), % takes out the next location 
     wander(Maze, Remainlst, NEWR, NEWC, NextSpot).
